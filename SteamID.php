@@ -95,7 +95,7 @@ class SteamID
 
     /**
      * Special flags for Chat accounts - they go in the top 8 bits
-     * of the steam ID's "instance", leaving 12 for the actual instances
+     * of the steam ID's "instance", leaving 12 for the actual instances.
      */
     const InstanceFlagClan = 524288; // ( k_unSteamAccountInstanceMask + 1 ) >> 1
     const InstanceFlagLobby = 262144; // ( k_unSteamAccountInstanceMask + 1 ) >> 2
@@ -152,7 +152,7 @@ class SteamID
             $this->SetAccountType(self::TypeIndividual);
             $this->SetAccountID($AccountID);
         } // SetFromSteam3String
-        else if (\preg_match('/^\\[([AGMPCgcLTIUai]):([0-4]):([0-9]{1,10})(:([0-9]+))?\\]$/', (string) $Value, $Matches) === 1) {
+        elseif (\preg_match('/^\\[([AGMPCgcLTIUai]):([0-4]):([0-9]{1,10})(:([0-9]+))?\\]$/', (string) $Value, $Matches) === 1) {
             $AccountID = $Matches[3];
 
             // Check for max unsigned 32-bit number
@@ -168,9 +168,9 @@ class SteamID
 
             if ($Type === 'T' || $Type === 'g') {
                 $InstanceID = self::AllInstances;
-            } else if (isset($Matches[5])) {
+            } elseif (isset($Matches[5])) {
                 $InstanceID = (int) $Matches[5];
-            } else if ($Type === 'U') {
+            } elseif ($Type === 'U') {
                 $InstanceID = self::DesktopInstance;
             } else {
                 $InstanceID = self::AllInstances;
@@ -180,7 +180,7 @@ class SteamID
                 $InstanceID = self::InstanceFlagClan;
 
                 $this->SetAccountType(self::TypeChat);
-            } else if ($Type === 'L') {
+            } elseif ($Type === 'L') {
                 $InstanceID = self::InstanceFlagLobby;
 
                 $this->SetAccountType(self::TypeChat);
@@ -191,7 +191,7 @@ class SteamID
             $this->SetAccountUniverse((int) $Matches[2]);
             $this->SetAccountInstance($InstanceID);
             $this->SetAccountID($AccountID);
-        } else if (self::IsNumeric($Value)) {
+        } elseif (self::IsNumeric($Value)) {
             $this->Data = \gmp_init($Value, 10);
         } else {
             throw new \InvalidArgumentException('Provided SteamID is invalid.');
@@ -242,7 +242,7 @@ class SteamID
                 {
                     if ($AccountInstance & self::InstanceFlagClan) {
                         $AccountTypeChar = 'c';
-                    } else if ($AccountInstance & self::InstanceFlagLobby) {
+                    } elseif ($AccountInstance & self::InstanceFlagLobby) {
                         $AccountTypeChar = 'L';
                     }
 
@@ -276,7 +276,7 @@ class SteamID
     /**
      * Renders this instance into Steam's new invite code. Which can be formatted as:
      * http://s.team/p/%s
-     * https://steamcommunity.com/user/%s
+     * https://steamcommunity.com/user/%s.
      *
      * @return string A Steam invite code which can be used in a URL.
      */
@@ -313,8 +313,7 @@ class SteamID
     {
         $AccountType = $this->GetAccountType();
 
-        if ($AccountType <= self::TypeInvalid || $AccountType >= 11) // EAccountType.Max
-        {
+        if ($AccountType <= self::TypeInvalid || $AccountType >= 11) { // EAccountType.Max
             return false;
         }
 
@@ -368,15 +367,13 @@ class SteamID
      * @param callable $VanityCallback Callback which is called when a vanity lookup is required
      *
      * @return SteamID Fluent interface
-     *
      */
     public static function SetFromURL($Value, callable $VanityCallback)
     {
         if (\preg_match('/^https?:\/\/steamcommunity\.com\/profiles\/(.+?)(?:\/|$)/', $Value, $Matches) === 1) {
             $Value = $Matches[1];
-        } else if (\preg_match('/^https?:\/\/steamcommunity\.com\/(id|groups|games)\/([\w-]+)(?:\/|$)/', $Value, $Matches) === 1
-            || \preg_match('/^()([\w-]+)$/', $Value, $Matches) === 1) // Empty capturing group so that $Matches has same indexes
-        {
+        } elseif (\preg_match('/^https?:\/\/steamcommunity\.com\/(id|groups|games)\/([\w-]+)(?:\/|$)/', $Value, $Matches) === 1
+            || \preg_match('/^()([\w-]+)$/', $Value, $Matches) === 1) { // Empty capturing group so that $Matches has same indexes
             $Length = \strlen($Matches[2]);
 
             if ($Length < 2 || $Length > 32) {
@@ -396,10 +393,10 @@ class SteamID
                 case 'groups':
                     $VanityType = self::VanityGroup;
                     break;
-                case 'games' :
+                case 'games':
                     $VanityType = self::VanityGameGroup;
                     break;
-                default      :
+                default:
                     $VanityType = self::VanityIndividual;
             }
 
@@ -408,7 +405,7 @@ class SteamID
             if ($Value === null) {
                 throw new \InvalidArgumentException('Provided vanity url does not resolve to any SteamID.');
             }
-        } else if (\preg_match('/^https?:\/\/(steamcommunity\.com\/user|s\.team\/p)\/([\w-]+)(?:\/|$)/', $Value, $Matches) === 1) {
+        } elseif (\preg_match('/^https?:\/\/(steamcommunity\.com\/user|s\.team\/p)\/([\w-]+)(?:\/|$)/', $Value, $Matches) === 1) {
             $Value = \strtolower($Matches[2]);
             $Value = \strtr($Value, \array_flip(self::$SteamInviteDictionary));
 
@@ -426,9 +423,9 @@ class SteamID
      *
      * @param int|string $Value The 64bit integer to assign this SteamID from.
      *
-     * @return SteamID Fluent interface
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return SteamID Fluent interface
      */
     public function SetFromUInt64($Value)
     {
@@ -575,7 +572,7 @@ class SteamID
     }
 
     /**
-     * Shift the bits of $x by $n steps to the left
+     * Shift the bits of $x by $n steps to the left.
      *
      * @param int|string|\GMP $x
      * @param int             $n
@@ -588,7 +585,7 @@ class SteamID
     }
 
     /**
-     * Shift the bits of $x by $n steps to the right
+     * Shift the bits of $x by $n steps to the right.
      *
      * @param int|string|\GMP $x
      * @param int             $n
@@ -601,7 +598,7 @@ class SteamID
     }
 
     /**
-     * This is way more restrictive than php's is_numeric()
+     * This is way more restrictive than php's is_numeric().
      *
      * @param int|string $n
      *
