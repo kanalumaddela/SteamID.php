@@ -1,13 +1,12 @@
 <?php
-// Simpler solution which doesn't perform any API requests and simply only works on /profiles/ urls
-$SteamID = SteamID::SetFromURL('http://steamcommunity.com/profiles/[U:1:2]', function() {
-    return null;
-});
 
+// Simpler solution which doesn't perform any API requests and simply only works on /profiles/ urls
+$SteamID = SteamID::SetFromURL('http://steamcommunity.com/profiles/[U:1:2]', function () {
+});
 
 $WebAPIKey = 'YOUR WEBAPI KEY HERE';
 
-$SteamID = SteamID::SetFromURL('http://steamcommunity.com/groups/valve', function($URL, $Type) use ($WebAPIKey) {
+$SteamID = SteamID::SetFromURL('http://steamcommunity.com/groups/valve', function ($URL, $Type) use ($WebAPIKey) {
     $Parameters =
         [
             'format'    => 'json',
@@ -38,7 +37,7 @@ $SteamID = SteamID::SetFromURL('http://steamcommunity.com/groups/valve', functio
             case 1:
                 return $Response['response']['steamid'];
             case 42:
-                return null;
+                return;
         }
     }
 

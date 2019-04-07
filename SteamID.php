@@ -52,7 +52,7 @@ class SteamID
     const WebInstance = 4;
     /**
      * Special flags for Chat accounts - they go in the top 8 bits
-     * of the steam ID's "instance", leaving 12 for the actual instances
+     * of the steam ID's "instance", leaving 12 for the actual instances.
      */
     const InstanceFlagClan = 524288;
     const InstanceFlagLobby = 262144;
@@ -221,7 +221,7 @@ class SteamID
     }
 
     /**
-     * Shift the bits of $x by $n steps to the left
+     * Shift the bits of $x by $n steps to the left.
      *
      * @param int|string|\GMP $x
      * @param int             $n
@@ -276,7 +276,7 @@ class SteamID
     }
 
     /**
-     * This is way more restrictive than php's is_numeric()
+     * This is way more restrictive than php's is_numeric().
      *
      * @param int|string $n
      *
@@ -307,15 +307,13 @@ class SteamID
      * @param callable $VanityCallback Callback which is called when a vanity lookup is required
      *
      * @return SteamID Fluent interface
-     *
      */
     public static function SetFromURL($Value, callable $VanityCallback)
     {
         if (preg_match('/^https?:\/\/steamcommunity\.com\/profiles\/(.+?)(?:\/|$)/', $Value, $Matches) === 1) {
             $Value = $Matches[1];
         } elseif (preg_match('/^https?:\/\/steamcommunity\.com\/(id|groups|games)\/([\w-]+)(?:\/|$)/', $Value, $Matches) === 1
-            || preg_match('/^()([\w-]+)$/', $Value, $Matches) === 1) // Empty capturing group so that $Matches has same indexes
-        {
+            || preg_match('/^()([\w-]+)$/', $Value, $Matches) === 1) { // Empty capturing group so that $Matches has same indexes
             $Length = strlen($Matches[2]);
 
             if ($Length < 2 || $Length > 32) {
@@ -335,10 +333,10 @@ class SteamID
                 case 'groups':
                     $VanityType = self::VanityGroup;
                     break;
-                case 'games' :
+                case 'games':
                     $VanityType = self::VanityGameGroup;
                     break;
-                default      :
+                default:
                     $VanityType = self::VanityIndividual;
             }
 
@@ -369,8 +367,7 @@ class SteamID
     {
         $AccountType = $this->GetAccountType();
 
-        if ($AccountType <= self::TypeInvalid || $AccountType >= 11) // EAccountType.Max
-        {
+        if ($AccountType <= self::TypeInvalid || $AccountType >= 11) { // EAccountType.Max
             return false;
         }
 
@@ -426,7 +423,7 @@ class SteamID
     }
 
     /**
-     * Shift the bits of $x by $n steps to the right
+     * Shift the bits of $x by $n steps to the right.
      *
      * @param int|string|\GMP $x
      * @param int             $n
@@ -557,7 +554,7 @@ class SteamID
     /**
      * Renders this instance into Steam's new invite code. Which can be formatted as:
      * http://s.team/p/%s
-     * https://steamcommunity.com/user/%s
+     * https://steamcommunity.com/user/%s.
      *
      * @return string A Steam invite code which can be used in a URL.
      */
@@ -590,9 +587,9 @@ class SteamID
      *
      * @param int|string $Value The 64bit integer to assign this SteamID from.
      *
-     * @return SteamID Fluent interface
-     *
      * @throws \InvalidArgumentException
+     *
+     * @return SteamID Fluent interface
      */
     public function SetFromUInt64($Value)
     {
